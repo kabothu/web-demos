@@ -21,7 +21,6 @@
     }
   },
   "require": {
-    "bower-asset/jquery": "^2.1",
     "bower-asset/bootstrap": "^3",
     "bower-asset/ilopx-jquery-ajax-progress": "^1"
   }
