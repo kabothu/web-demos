@@ -1,0 +1,27 @@
+{
+  "name": "ilopx/web-demos-proj",
+  "description": "Demonstration of web projects in the study of web technologies",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "ilopX",
+      "email": "ilopX@ukr.net"
+    }
+  ],
+  "autoload":{
+    "psr-4":{
+      "ilopx\\libs\\": "libs/"
+    }
+  },
+  "autoload-dev":{
+    "psr-4":{
+      "ilopx\\demos\\console\\": "console-proj/",
+      "ilopx\\demos\\browser\\": "browser-proj/"
+    }
+  },
+  "require": {
+    "components/jquery": "^2.1",
+    "components/bootstrap": "^3.3"
+  }
+}
