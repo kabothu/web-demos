@@ -22,6 +22,7 @@
   },
   "require": {
     "components/jquery": "^2.1",
-    "components/bootstrap": "^3.3"
+    "components/bootstrap": "^3.3",
+    "ilopx/jquery-ajax-progress": "^1.0"
   }
 }
