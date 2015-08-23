@@ -21,8 +21,8 @@
     }
   },
   "require": {
-    "components/jquery": "^2.1",
-    "components/bootstrap": "^3.3",
-    "ilopx/jquery-ajax-progress": "^1.0"
+    "bower-asset/jquery": "^2.1",
+    "bower-asset/bootstrap": "^3",
+    "bower-asset/ilopx-jquery-ajax-progress": "^1"
   }
 }
