@@ -1,4 +1,4 @@
-![NetTes](https://raw.githubusercontent.com/ilopX/web-demosj/master/demos/web/NetTest/example.png)
+![NetTes](https://raw.githubusercontent.com/ilopX/web-demos/master/demos/web/NetTest/example.png)
 
 # NetTest
 PHP class for testing internet client speed
