@@ -1,4 +1,2 @@
-browser-proj ignore-export
-console-proj ignore-export
-.gitattributes ignore-export
-index.php ignore-export
+.gitattributes export-ignore
+demos export-ignore

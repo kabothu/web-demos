@@ -1,3 +1,5 @@
+![NetTes](https://raw.githubusercontent.com/ilopX/web-demosj/master/demos/web/NetTest/example.png)
+
 # NetTest
 PHP class for testing internet client speed
 
@@ -6,7 +8,7 @@ Run example and setting the sensitivity param for speed internet connection
 ```
 example.php?sensitivity=50
 ```
-![NetTes](https://raw.githubusercontent.com/ilopX/web-demos-proj/master/projects/NetTest/example.png)
+
 
 ## Download
 [NetTest.php](https://cdn.rawgit.com/ilopX/web-demos-proj/master/libs/NetTest.php)

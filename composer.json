@@ -1,5 +1,5 @@
 {
-  "name": "ilopx/web-demos-proj",
+  "name": "ilopx/web-demos",
   "description": "Demonstration of web projects in the study of web technologies",
   "minimum-stability": "stable",
   "license": "MIT",
@@ -16,12 +16,19 @@
   },
   "autoload-dev":{
     "psr-4":{
-      "ilopx\\demos\\console\\": "console-proj/",
-      "ilopx\\demos\\browser\\": "browser-proj/"
+      "ilopx\\demos\\console\\": "demos/console/",
+      "ilopx\\demos\\web\\": "demos/console/"
+    }
+  },
+  "require-dev": {
+    "bower-asset/bootstrap": "^3"
+  },
+  "extra": {
+    "asset-installer-paths": {
+      "bower-asset-library": "vendor/bower"
     }
   },
   "require": {
-    "bower-asset/bootstrap": "^3",
-    "bower-asset/ilopx-jquery-ajax-progress": "^1"
+    "michelf/php-markdown": "^1.5"
   }
 }

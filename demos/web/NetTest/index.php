@@ -20,7 +20,7 @@ $netTest = new NetTest();
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="/vendor/components/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/vendor/bower/bootstrap/css/bootstrap.css">
 </head>
 <body class="container">
 <?php
