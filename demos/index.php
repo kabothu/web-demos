@@ -12,40 +12,75 @@
 
 include_once '../vendor/autoload.php';
 
+
 use \Michelf\MarkdownExtra;
-$contentReadme = '';
 
-if (isset($_REQUEST['readmeUrl'])){
-    if (file_exists($fileReadMe = __DIR__.$_REQUEST['readmeUrl'])){
-        $contentReadme = MarkdownExtra::defaultTransform(file_get_contents($fileReadMe));
+class Index{
+    private $contentReadme;
+    private $navWebDemos;
+    private  $navConsoleDemos;
+
+    function __construct(){
+        if (isset($_REQUEST['ajaxreadme'])){
+            echo $this->readmeContent();
+            exit;
+        }
     }
 
-    if (isset($_REQUEST['getAjax']) && $_REQUEST['getAjax']){
-        echo $contentReadme;
-        exit;
+    function readmeContent(){
+        if (!isset($this->contentReadme)){
+            $url = isset($_REQUEST['ajaxreadme']) ? $_REQUEST['ajaxreadme']: $_SERVER['REQUEST_URI'];
+            if ($url == '/demos/'){
+                $dirs = $this->scanDir('/web');
+                if (isset($dirs[2]))
+                    $url = '/demos/web/'.$dirs[2];
+            }
+            else{
+                $url = preg_replace('/^\/demos\/ibox/', '/demos', $url);
+            }
+
+            if (file_exists($fileReadMe = dirname(__DIR__).$url.'/readme.md'))
+                $this->contentReadme = MarkdownExtra::defaultTransform(file_get_contents($fileReadMe));
+            else
+                $this->contentReadme = '';
+
+        }
+
+        return $this->contentReadme;
     }
 
+    function navWebDemos(){
+        if (!isset($this->navWebDemos)){
+            $this->navWebDemos = '';
+            $dirs = $this->scanDir('/web');
+            foreach($dirs as $proj){
+                $this->navWebDemos .= "<li><a role='ajax' href='/demos/web/{$proj}'>$proj</a><br></li>";
+            }
+        }
+        return $this->navWebDemos;
+    }
+
+    function navConsoleDemos(){
+        if (!isset($this->navConsoleDemos)){
+            $this->navConsoleDemos = '';
+            $dirs = $this->scanDir('/console');
+            foreach($dirs as $proj){
+                $proj = __DIR__."/console/$proj/run.php";
+                if (file_exists($proj)){
+                    $this->navConsoleDemos .= "<code>php $proj</code><br>";
+                }
+            }
+        }
+
+        return $this->navConsoleDemos;
+    }
+
+    private function scanDir($dir){
+        return array_diff(scandir(__DIR__.$dir), array('..', '.'));
+    }
 }
 
-$webDemos = '';
-$scanned_directory = array_diff(scandir(__DIR__.'/web'), array('..', '.'));
-foreach($scanned_directory as $proj){
-    $readme = '';
-    $fileReadMe = '/web/'.$proj.'/README.md';
-    if (file_exists(__DIR__.$fileReadMe)){
-        $fileReadMe = " data-readme-url=\"$fileReadMe\"";
-    }
-    $webDemos .= "<li><a role='ajax' href='/demos/web/{$proj}'{$fileReadMe}>$proj</a><br></li>";
-}
-
-$consoleDemos = '';
-$scanned_directory = array_diff(scandir(__DIR__.'/console'), array('..', '.'));
-foreach($scanned_directory as $proj){
-    $proj = __DIR__."/console/$proj/run.php";
-    if (file_exists($proj)){
-        $consoleDemos .= "<code>php $proj</code><br>";
-    }
-}
+$index = new Index();
 
 ?>
 <!DOCTYPE html>
@@ -55,72 +90,91 @@ foreach($scanned_directory as $proj){
 </head>
 <body>
     <div class="container">
-        <div class="col-md-3">
-            <?php if ($webDemos): ?>
+        <div class="col-md-2">
+            <?php if ($index->navWebDemos()): ?>
                 <h2>Browsers</h2>
-                <ul class="nav nav-pills nav-stacked"><?= $webDemos ?></ul>
+                <ul class="nav nav-pills nav-stacked"><?= $index->navWebDemos() ?></ul>
             <?php endif; ?>
 
-            <?php if ($webDemos): ?>
+            <?php if ($index->navConsoleDemos()): ?>
                 <h2>Console</h2>
-                <ul class="nav nav-pills nav-stacked"><?= $consoleDemos ?></ul>
+                <ul class="nav nav-pills nav-stacked"><?= $index->navConsoleDemos() ?></ul>
             <?php endif; ?>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-10">
             <h1>Web demos projects</h1>
-
-
             <ul id="myTabs" class="nav nav-tabs" role="tablist" style="margin-bottom: 20px">
-                <li class="active"><a href="#project" id="home-tab"  data-toggle="tab" >Home</a></li>
-                <li><a href="#readme"  id="profile-tab" data-toggle="tab">Profile</a></li>
+                <li class="active"><a href="#project" data-toggle="tab" >Home</a></li>
+                <li><a href="#readme"  data-toggle="tab">Readme.md</a></li>
+                <li><a id="run-only" href="#" data-toggle="tab">Run only</a></li>
             </ul>
             <div id="myTabContent" class="tab-content" style="padding: 10px">
+                <noscript><div>
+                        <div class="alert alert-danger">JavaScript is Disabled</div>
+                </noscript>
                 <iframe class="tab-pane fade in active" id="project" style="width: 100%!important;" frameborder="0">
                 </iframe>
                 <div class="tab-pane fade" id="readme">
-                    <?= $contentReadme ?>
+                    <?= $index->readmeContent() ?>
                 </div>
             </div>
-
         </div>
-
     </div>
     <script src="/vendor/bower/jquery/dist/jquery.js"></script>
     <script src="/vendor/bower/bootstrap/dist/js/bootstrap.js"></script>
     <script>
-        function autoResize(id){
+        function projectRun(src){
             var newheight;
+            var proj;
 
-            if(document.getElementById){
-                newheight=document.getElementById(id).contentWindow.document .body.scrollHeight;
-            }
-
-            document.getElementById(id).height= (newheight) + "px";
+            $('#project').attr('src',  src).load(function(){
+                if (document.getElementById) {
+                    proj = document.getElementById('project');
+                    newheight = proj.contentWindow.document.body.scrollHeight;
+                    proj.height= (newheight) + "px";
+                    document.getElementById('run-only').onclick = function(){
+                        location.href = src;
+                    }
+                }
+            });
         }
-        $('[role=ajax]').click(function(){
+
+        var lastActiveNav = null;
+        var nav = $('[role=ajax]')
+            .click(function(){
             var _this = $(this);
-            $('#project').attr('src', _this.attr('href')).load(function(){
-                autoResize('project');
+
+            if (lastActiveNav)
+                lastActiveNav.removeClass('active');
+
+            lastActiveNav = _this.parent().addClass('active');
+            projectRun( _this.attr('href'));
+
+            $.ajax({
+                method: 'post',
+                url: 'index.php',
+                data: {
+                    ajaxreadme:  _this.attr('href')
+                },
+                success: function(msg) {
+                    $('#readme').html(msg);
+                    history.pushState(null, null, _this.attr('href').replace(/^\/demos/, '/demos/ibox'));
+                },
+                error: function() {
+                }
             });
 
-            if (_this.attr('data-readme-url')){
-                $.ajax({
-                   // method: 'GET',
-                    url: 'index.php',
-                    data: {
-                        readmeUrl: _this.attr('data-readme-url'),
-                        getAjax: true
-                    },
-                    success: function(msg) {
-                        $('#readme').html(msg);
-                    },
-                    error: function() {
-                        // TODO add message error
-                    }
-                });
-            }
             return false;
         });
+
+        if (location.pathname == '/demos/'){
+            if (nav.length){
+                projectRun(nav.eq(0).attr('href'));
+            }
+        }
+        else{
+            projectRun(location.pathname.replace(/^\/demos\/ibox/, '/demos'));
+        }
     </script>
 </body>
 </html>

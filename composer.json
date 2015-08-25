@@ -21,14 +21,12 @@
     }
   },
   "require-dev": {
-    "bower-asset/bootstrap": "^3"
+    "bower-asset/bootstrap": "^3",
+    "michelf/php-markdown": "^1.5"
   },
   "extra": {
     "asset-installer-paths": {
       "bower-asset-library": "vendor/bower"
     }
-  },
-  "require": {
-    "michelf/php-markdown": "^1.5"
   }
 }
