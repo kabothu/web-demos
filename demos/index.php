@@ -54,7 +54,7 @@ class Index{
             $this->navWebDemos = '';
             $dirs = $this->scanDir('/web');
             foreach($dirs as $proj){
-                $this->navWebDemos .= "<li><a role='ajax' href='/demos/web/{$proj}'>$proj</a><br></li>";
+                $this->navWebDemos .= "<li><a role='ajax' href='/demos/web/{$proj}'>$proj</a></li>";
             }
         }
         return $this->navWebDemos;
@@ -89,7 +89,7 @@ $index = new Index();
     <link rel="stylesheet" href="/vendor/bower/bootstrap/dist/css/bootstrap.css">
 </head>
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <div class="col-md-2">
             <?php if ($index->navWebDemos()): ?>
                 <h2>Browsers</h2>
@@ -123,56 +123,67 @@ $index = new Index();
     <script src="/vendor/bower/jquery/dist/jquery.js"></script>
     <script src="/vendor/bower/bootstrap/dist/js/bootstrap.js"></script>
     <script>
-        function projectRun(src){
-            var newheight;
-            var proj;
 
+        var lastActiveNav = null;
+        var webDemos = $('[href^="/demos/web"]');
+
+
+        function projectRun(src){
             $('#project').attr('src',  src).load(function(){
                 if (document.getElementById) {
-                    proj = document.getElementById('project');
-                    newheight = proj.contentWindow.document.body.scrollHeight;
-                    proj.height= (newheight) + "px";
+                    var proj = document.getElementById('project');
+                    proj.height= proj.contentWindow.document.body.scrollHeight+ "px";
                     document.getElementById('run-only').onclick = function(){
                         location.href = src;
+                    };
+                }
+            });
+
+            history.pushState(null, null, src.replace(/^\/demos/, '/demos/ibox'));
+            var url = location.pathname.replace(/^\/demos\/ibox/, '/demos');
+
+            webDemos.each(function(i, a) {
+
+                if (url == a.getAttribute('href')) {
+                    if (lastActiveNav) {
+                        lastActiveNav.removeClass('active');
                     }
+                    console.log('set');
+                    lastActiveNav = $(a).parent().addClass('active');
+
+                    return false;
                 }
             });
         }
 
-        var lastActiveNav = null;
-        var nav = $('[role=ajax]')
+        var nav = $('a[role=ajax]')
             .click(function(){
-            var _this = $(this);
+                var _this = $(this);
 
-            if (lastActiveNav)
-                lastActiveNav.removeClass('active');
+                projectRun( _this.attr('href'));
 
-            lastActiveNav = _this.parent().addClass('active');
-            projectRun( _this.attr('href'));
+                $.ajax({
+                    method: 'post',
+                    url: 'index.php',
+                    data: {
+                        ajaxreadme:  _this.attr('href')
+                    },
+                    success: function(msg) {
+                        $('#readme').html(msg);
 
-            $.ajax({
-                method: 'post',
-                url: 'index.php',
-                data: {
-                    ajaxreadme:  _this.attr('href')
-                },
-                success: function(msg) {
-                    $('#readme').html(msg);
-                    history.pushState(null, null, _this.attr('href').replace(/^\/demos/, '/demos/ibox'));
-                },
-                error: function() {
-                }
+                    },
+                    error: function() {
+                    }
+                });
+
+                return false;
             });
-
-            return false;
-        });
 
         if (location.pathname == '/demos/'){
             if (nav.length){
-                projectRun(nav.eq(0).attr('href'));
+                nav.eq(0).click();
             }
-        }
-        else{
+        }else{
             projectRun(location.pathname.replace(/^\/demos\/ibox/, '/demos'));
         }
     </script>

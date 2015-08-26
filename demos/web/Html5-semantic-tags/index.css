@@ -1,0 +1,48 @@
+
+
+body, header, section, footer, nav, p, article, aside{
+    outline: 1px dashed rgba(157, 79, 255, 0.36);
+    background: rgba(157, 79, 255, 0.14);
+    padding: 10px;
+    margin: 10px;
+    outline-offset: -3px;
+    font-weight: bold;
+    color: rgb(106, 70, 145);
+}
+
+body{
+    margin: 10px auto;
+    width: 960px;
+}
+
+.leftContent{
+    width: 552px;
+    float: left;
+
+}
+
+.rightContent{
+    width: 328px;
+    float: left;
+
+}
+
+.leftArticle{
+    width: 307px;
+    float: left;
+    margin-top: 1px;
+}
+
+.rightArticle{
+    width: 125px;
+    float: left;
+    margin-top: 1px;
+}
+
+footer{
+    clear: both;
+}
+
+.rightNav{
+    height: 400px;
+}
