@@ -20,11 +20,18 @@ class Index{
     private $navWebDemos;
     private  $navConsoleDemos;
 
+
     function __construct(){
         if (isset($_REQUEST['ajaxreadme'])){
             echo $this->readmeContent();
             exit;
         }
+
+
+    }
+
+    function test(){
+        return file_get_contents(__DIR__.'\Html5-semantic-tags\index.html');
     }
 
     function readmeContent(){
@@ -127,55 +134,51 @@ $index = new Index();
         var lastActiveNav = null;
         var webDemos = $('[href^="/demos/web"]');
 
-
-        function projectRun(src){
-            $('#project').attr('src',  src).load(function(){
+        function projectRun(urlProject){
+            $('#project').attr('src',  urlProject).load(function(){
                 if (document.getElementById) {
-                    var proj = document.getElementById('project');
-                    proj.height= proj.contentWindow.document.body.scrollHeight+ "px";
+                    this.height= this.contentWindow.document.body.scrollHeight+ "px";
                     document.getElementById('run-only').onclick = function(){
-                        location.href = src;
+                        location.href = urlProject;
                     };
                 }
             });
 
-            history.pushState(null, null, src.replace(/^\/demos/, '/demos/ibox'));
+            var currUrl = urlProject.replace(/^\/demos/, '/demos/ibox');
+            history.pushState(null, null, currUrl);
+
+            $.ajax({
+                method: 'post',
+                url: 'index.php',
+                data: {
+                    ajaxreadme:  currUrl
+                },
+                success: function(msg) {
+                    $('#readme').html(msg);
+
+                },
+                error: function() {
+                }
+            });
+
             var url = location.pathname.replace(/^\/demos\/ibox/, '/demos');
-
             webDemos.each(function(i, a) {
-
                 if (url == a.getAttribute('href')) {
                     if (lastActiveNav) {
                         lastActiveNav.removeClass('active');
                     }
-                    console.log('set');
                     lastActiveNav = $(a).parent().addClass('active');
 
                     return false;
                 }
             });
+
+            return false;
         }
 
         var nav = $('a[role=ajax]')
             .click(function(){
-                var _this = $(this);
-
-                projectRun( _this.attr('href'));
-
-                $.ajax({
-                    method: 'post',
-                    url: 'index.php',
-                    data: {
-                        ajaxreadme:  _this.attr('href')
-                    },
-                    success: function(msg) {
-                        $('#readme').html(msg);
-
-                    },
-                    error: function() {
-                    }
-                });
-
+                projectRun(this.getAttribute('href'));
                 return false;
             });
 
