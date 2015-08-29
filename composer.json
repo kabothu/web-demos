@@ -16,8 +16,9 @@
   },
   "autoload-dev":{
     "psr-4":{
+      "ilopx\\demos\\": "demos",
       "ilopx\\demos\\console\\": "demos/console/",
-      "ilopx\\demos\\web\\": "demos/console/"
+      "ilopx\\demos\\web\\": "demos/web/"
     }
   },
 
