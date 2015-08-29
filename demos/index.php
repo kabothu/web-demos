@@ -5,7 +5,7 @@
  * Date: 20.08.2015
  * Time: 12:45
  * Name: Web demos proj
- * Project: https://ilopX.github.io/web-demos
+ * Project: https://github.com/ilopX/web-demos
  * Demo: todo
  * This file: todo
  */
@@ -119,7 +119,7 @@ $index = new Index();
                 <noscript><div>
                         <div class="alert alert-danger">JavaScript is Disabled</div>
                 </noscript>
-                <iframe class="tab-pane fade in active" id="project" style="width: 100%!important;" frameborder="0">
+                <iframe class="tab-pane fade in active" id="project" style="width: 100%!important;" frameborder="0" scrolling="no">
                 </iframe>
                 <div class="tab-pane fade" id="readme">
                     <?= $index->readmeContent() ?>
@@ -129,20 +129,28 @@ $index = new Index();
     </div>
     <script src="/vendor/bower/jquery/dist/jquery.js"></script>
     <script src="/vendor/bower/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/vendor/bower/jquery-mutate/js/events.js"></script>
+    <script src="/vendor/bower/jquery-mutate/js/mutate.js"></script>
     <script>
 
         var lastActiveNav = null;
         var webDemos = $('[href^="/demos/web"]');
 
         function projectRun(urlProject){
-            $('#project').attr('src',  urlProject).load(function(){
-                if (document.getElementById) {
-                    this.height= this.contentWindow.document.body.scrollHeight+ "px";
-                    document.getElementById('run-only').onclick = function(){
-                        location.href = urlProject;
-                    };
-                }
-            });
+            var project = document.getElementById('project');
+            project.onload = function(){
+                var frameBody = $(this.contentWindow.document.body);
+                frameBody.mutate('height', function(el){
+                    project.height= el.scrollHeight+'px';
+                });
+                project.height= frameBody[0].scrollHeight+'px';
+
+                document.getElementById('run-only').onclick = function(){
+                    location.href = urlProject;
+                };
+            };
+            project.setAttribute('src', urlProject);
+
 
             var currUrl = urlProject.replace(/^\/demos/, '/demos/ibox');
             history.pushState(null, null, currUrl);

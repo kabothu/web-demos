@@ -22,7 +22,9 @@
   },
   "require-dev": {
     "bower-asset/bootstrap": "^3",
-    "michelf/php-markdown": "^1.5"
+    "michelf/php-markdown": "^1.5",
+    "bower-asset/jquery-mutate": "dev-master"
+
   },
   "extra": {
     "asset-installer-paths": {
