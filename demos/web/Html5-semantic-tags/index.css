@@ -46,3 +46,7 @@ footer{
 .rightNav{
     height: 400px;
 }
+
+summary{
+    cursor: pointer;
+}
