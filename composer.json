@@ -25,7 +25,8 @@
   "require-dev": {
     "bower-asset/bootstrap": "^3",
     "michelf/php-markdown": "^1.5",
-    "bower-asset/jquery-mutate": "dev-master"
+    "bower-asset/jquery-mutate": "dev-master",
+    "bower-asset/html5shiv": "*"
 
   },
   "extra": {
