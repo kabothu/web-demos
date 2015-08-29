@@ -20,6 +20,7 @@
       "ilopx\\demos\\web\\": "demos/console/"
     }
   },
+
   "require-dev": {
     "bower-asset/bootstrap": "^3",
     "michelf/php-markdown": "^1.5",

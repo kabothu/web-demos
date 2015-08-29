@@ -132,7 +132,6 @@ $index = new Index();
     <script src="/vendor/bower/jquery-mutate/js/events.js"></script>
     <script src="/vendor/bower/jquery-mutate/js/mutate.js"></script>
     <script>
-
         var lastActiveNav = null;
         var webDemos = $('[href^="/demos/web"]');
 
