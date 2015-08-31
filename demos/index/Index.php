@@ -27,7 +27,7 @@ class Index{
         }
         else if(isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] == '/demos/'){
             $host  = $_SERVER['HTTP_HOST'];
-            $uri   =  preg_replace('/^\/demos/', '/demos/ibox', $this->firstProject('/web'));
+            $uri   =  preg_replace('/^\/demos/', '/demos/ajax', $this->firstProject('/web'));
             header("Location: http://{$host}{$uri}");
             exit;
         }
@@ -58,7 +58,7 @@ class Index{
             $url = $_SERVER['REQUEST_URI'];
         }
 
-        $url =  preg_replace('/^\/demos\/ibox/', '/demos', $url);
+        $url =  preg_replace('/^\/demos\/ajax/', '/demos', $url);
 
         return $this->url = $url;
     }
@@ -77,7 +77,7 @@ class Index{
             if (file_exists($fileReadMe = dirname($this->demosDir).$this->url().'/readme.md'))
                 $this->contentReadme = MarkdownExtra::defaultTransform(file_get_contents($fileReadMe));
             else
-                $this->contentReadme = '';
+                $this->contentReadme = 'file README.md not exist';
 
         }
 
@@ -99,10 +99,10 @@ class Index{
         if (!isset($this->navConsoleDemos)){
             $this->navConsoleDemos = '';
             $dirs = $this->scanDir('/console');
+
             foreach($dirs as $proj){
-                $proj = __DIR__."/console/$proj/run.php";
-                if (file_exists($proj)){
-                    $this->navConsoleDemos .= "<code>php $proj</code><br>";
+                if (is_dir($this->demosDir."/console/$proj")){
+                    $this->navConsoleDemos .= "<code>$proj</code><br>";
                 }
             }
         }

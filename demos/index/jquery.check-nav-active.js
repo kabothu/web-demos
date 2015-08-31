@@ -4,18 +4,13 @@
             url: location.pathname
         }, options);
 
-        return this.each(function(i, a) {
-            if (set.url == a.getAttribute('href')) {
-                if (lastActiveNav) {
-                    lastActiveNav.removeClass('active');
-                }
-                lastActiveNav = $(a).parent().addClass('active');
-
-                return false;
-            }
+        this.each(function(i, li) {
+            li = $(li);
+            li.toggleClass('active', set.url == li.find('a:first').attr('href'));
         });
-    };
 
+        return this;
+    };
 }( jQuery ));
 
 

@@ -37,6 +37,6 @@ $index = new Index();
     <script src="/vendor/bower/jquery-mutate/js/events.js"></script>
     <script src="/vendor/bower/jquery-mutate/js/mutate.js"></script>
     <script src="/demos/index/jquery.check-nav-active.js"></script>
-    <script src="/demos/index/index.js"></script>
+    <script src="/demos/index/Mainnav.js"></script>
 </body>
 </html>

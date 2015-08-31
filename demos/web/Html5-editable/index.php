@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="/vendor/bower/bootstrap/dist/css/bootstrap.css">
 </head>
 <body>
-    <div class="row">
+    <div class="container">
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading">Edit name <span class="glyphicon glyphicon-floppy-saved" style="float: right; display: none"></span></div>
