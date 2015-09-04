@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: XTreme.ws
- * Date: 29.08.2015
- * Time: 18:46
+ * Date: 04.09.2015
+ * Time: 19:52
  */
 
 namespace ilopx\demos\index;
@@ -11,39 +11,133 @@ namespace ilopx\demos\index;
 use \Michelf\MarkdownExtra;
 
 class Index{
-    private $contentReadme;
-    private $navWebDemos;
-    private $navConsoleDemos;
-    private $url;
+    const DIR_DEMOS_WEB = '/web';
+    const DIR_DEMOS_CONSOLE = '/console';
 
-    public $demosDir;
+    const DATA_NAV_WEB = 1;
+    const DATA_NAV_CONSOLE = 2;
+    const DATA_TABS = 3;
+
+    private $demosDir;
+    private $url;
 
     function __construct(){
         $this->demosDir = dirname(__DIR__);
+        $this->url(); // init var $this->url
+    }
 
-        if (isset($_REQUEST['ajaxurl'])){
-            echo $this->readmeContent();
-            exit;
+    function isAjax(){
+        return isset($_REQUEST['ajaxurl']);
+    }
+
+    function isRedirect(){
+        return isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] == '/demos/';
+    }
+
+    function redirect(){
+        $host = $_SERVER['HTTP_HOST'];
+        $uri =  $this->toAjaxUrl($this->firstProject(Index::DIR_DEMOS_WEB));
+        header("Location: http://{$host}{$uri}");
+    }
+
+    function render($name){
+        $index = $this;
+        include_once "view/$name.php";
+    }
+
+    //////////////////////////// DATA /////////////////////////////////////////////////
+    private $dataWebDemos;
+    private $dataNavConsole;
+
+    function dataNavWeb(){
+        if (!isset($this->dataWebDemos)){
+            $this->dataWebDemos = $this->scanDir(Index::DIR_DEMOS_WEB);
         }
-        else if(isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] == '/demos/'){
-            $host  = $_SERVER['HTTP_HOST'];
-            $uri   =  preg_replace('/^\/demos/', '/demos/ajax', $this->firstProject('/web'));
-            header("Location: http://{$host}{$uri}");
-            exit;
-        }
+        return $this->dataWebDemos;
     }
 
 
-    function isError(){
-        $chekFiles = ['index.php', 'index.html', 'index.htm'];
-        $url = dirname($this->demosDir).'/'.$this->url();
+    function dataNavConsole(){
+        if (!isset($this->dataNavConsole)){
+            $this->dataNavConsole = $this->scanDir(Index::DIR_DEMOS_CONSOLE);
+        }
 
-        foreach($chekFiles as $file){
-            if (file_exists($url.'/'.$file)){
-                return false;
+        return $this->dataNavConsole;
+    }
+    function dataProjectFile(){
+        $fileName_settings = dirname($this->demosDir).$this->url.'/_settings.php';
+
+        $data = [];
+        if (file_exists($fileName_settings)){
+            $sett = include $fileName_settings;
+
+            if (isset($sett['live']) && $sett['live']){
+                $data[] = $this->createDataLive($fileName_settings);
+            }
+
+            foreach($sett['source-files'] as $file){
+                $data[] = $this->createDataFromFile(dirname($fileName_settings),$file);
+            }
+
+            if (isset($sett['live-only']) && $sett['live-only']){
+                $data[] = $this->createDataLiveOnly();
             }
         }
-        return true;
+
+        return $data;
+    }
+
+    //////////////////////////// PRIVATE //////////////////////////////////////////////
+    private function createDataFromFile($path, $name){
+        $item = [];
+        $fileName = $path.'/'.$name;
+        $item['name'] = $name;
+        $item['id'] = preg_replace('/\\/', '-', $name);
+        $item['content'] = $item['id'] .file_get_contents($fileName);
+        $item['file-type'] = pathinfo($fileName, PATHINFO_EXTENSION);
+
+        if ($item['file-type'] == 'md'){
+            $item['content'] = MarkdownExtra::defaultTransform($item['content']);
+        }
+
+        return $item;
+    }
+
+    private function createDataLive(){
+        $item['id'] = $item['name'] = 'Live';
+        $item['content'] = '';
+        $item['file-type'] = 'live';
+        return $item;
+    }
+
+    private function createDataLiveOnly(){
+        $item['name'] = 'Live Only';
+        $item['id'] = 'live-only';
+        $item['content'] = '';
+        $item['file-type'] = 'live';
+        return $item;
+    }
+
+    //////////////////////////// UTILS ///////////////////////////////////////////////
+    // возвращает все подпапки директории
+    private function scanDir($dir){
+        return array_diff(scandir($this->demosDir.DIRECTORY_SEPARATOR.$dir), array('..', '.', 'index'));
+    }
+
+    private function firstProject($dirDemos){
+        $dirs = $this->scanDir($dirDemos);
+        if (isset($dirs[2]))
+            return "/demos$dirDemos/".$dirs[2];
+
+        return '';
+    }
+
+    private function toAjaxUrl($url){
+        return preg_replace('/^\/demos/', '/demos/ajax', $url);
+    }
+
+    private function toNormalUrl($url){
+        return preg_replace('/^\/demos\/ajax/', '/demos', $url);
     }
 
     function url(){
@@ -52,70 +146,13 @@ class Index{
         }
 
         $url = '';
-        if (isset($_REQUEST['ajaxurl'])){
+        if ($this->isAjax()){
             $url = $_REQUEST['ajaxurl'];
         }else if (isset($_SERVER['REQUEST_URI'])){
             $url = $_SERVER['REQUEST_URI'];
         }
 
-        $url =  preg_replace('/^\/demos\/ajax/', '/demos', $url);
-
-        return $this->url = $url;
-    }
-
-    function firstProject($projDir){
-        $dirs = $this->scanDir($projDir);
-        if (isset($dirs[2]))
-            return "/demos$projDir/".$dirs[2];
-
-        return '';
-    }
-
-    function readmeContent(){
-
-        if (!isset($this->contentReadme)){
-            if (file_exists($fileReadMe = dirname($this->demosDir).$this->url().'/readme.md'))
-                $this->contentReadme = MarkdownExtra::defaultTransform(file_get_contents($fileReadMe));
-            else
-                $this->contentReadme = 'file README.md not exist';
-
-        }
-
-        return $this->contentReadme;
-    }
-
-    function navWebDemos(){
-        if (!isset($this->navWebDemos)){
-            $this->navWebDemos = '';
-            $dirs = $this->scanDir('/web');
-            foreach($dirs as $proj){
-                $this->navWebDemos .= "<li><a role='ajax' href='/demos/web/{$proj}'>$proj</a></li>";
-            }
-        }
-        return $this->navWebDemos;
-    }
-
-    function navConsoleDemos(){
-        if (!isset($this->navConsoleDemos)){
-            $this->navConsoleDemos = '';
-            $dirs = $this->scanDir('/console');
-
-            foreach($dirs as $proj){
-                if (is_dir($this->demosDir."/console/$proj")){
-                    $this->navConsoleDemos .= "<code>$proj</code><br>";
-                }
-            }
-        }
-
-        return $this->navConsoleDemos;
-    }
-
-    function render($name){
-        $index = $this;
-        include_once "render/$name.php";
-    }
-
-    private function scanDir($dir){
-        return array_diff(scandir($this->demosDir.$dir), array('..', '.', 'index'));
+        return $this->url = $this->toNormalUrl($url);
     }
 }
+

@@ -10,6 +10,7 @@
         frameBody: function(){
             return $(Mainnav.frame[0].contentWindow.document.body);
         },
+        // инициализируем приложение
         init: function(){
             this.nav.on('click', 'a', function(e){
                 e.preventDefault();
@@ -21,13 +22,10 @@
             Mainnav.handleState();
             Mainnav.run(location.pathname);
             Mainnav.addHistory(location.pathname, true);
-
         },
         run: function(url){
             var normalUrl = Mainnav.toNormalUrl(location.pathname);
-            Mainnav.nav.checkNavActive({
-                url: normalUrl
-            });
+            Mainnav.nav.checkNavActive(normalUrl);
 
             Mainnav.loadReadme(url);
             Mainnav.loadIndex(normalUrl);
@@ -71,9 +69,6 @@
                     if (el.scrollHeight)
                      Mainnav.frame.height(el.scrollHeight);
                 });*/
-                Mainnav.main.on('resize', function(){
-                    console.log('111');
-                });
 
              }).attr('src', Mainnav.toNormalUrl(url));
         },

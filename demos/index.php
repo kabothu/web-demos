@@ -14,7 +14,18 @@ include_once '../vendor/autoload.php';
 
 use ilopx\demos\index\Index;
 
+echo preg_replace("/\//", '-', 'asdasdas/dasdasd/asda\asdasd\asd');
+exit;
+
 $index = new Index();
+if ($index->isAjax()){
+    $index->render('tabs');
+    exit;
+}
+else if ($index->isRedirect()){
+    $index->redirect();
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -34,8 +45,6 @@ $index = new Index();
     </div>
     <script src="/vendor/bower/jquery/dist/jquery.js"></script>
     <script src="/vendor/bower/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="/vendor/bower/jquery-mutate/js/events.js"></script>
-    <script src="/vendor/bower/jquery-mutate/js/mutate.js"></script>
     <script src="/demos/index/jquery.check-nav-active.js"></script>
     <script src="/demos/index/Mainnav.js"></script>
 </body>

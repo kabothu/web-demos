@@ -1,12 +1,11 @@
 (function ( $ ) {
-    $.fn.checkNavActive = function(options) {
-        var set = $.extend({
-            url: location.pathname
-        }, options);
+    $.fn.checkNavActive = function(url) {
+        if (url == undefined)
+            url = location.pathname;
 
         this.each(function(i, li) {
             li = $(li);
-            li.toggleClass('active', set.url == li.find('a:first').attr('href'));
+            li.toggleClass('active', url == li.find('a:first').attr('href'));
         });
 
         return this;

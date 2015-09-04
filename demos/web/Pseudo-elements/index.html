@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        details{
+            margin-bottom: 10px;
+            border-bottom: 2px solid #f4f4f4;
+        }
+        summary{
+            cursor: pointer;
+        }
+
+        *.ps::before, *.ps::after{
+            content: "";
+            background-color: red;
+            display: inline-block;
+            border: 1px solid rgb(210, 0, 4);
+        }
+
+        *.ps::before{
+            content: "::before";
+        }
+        *.ps::after{
+            content: "::after";
+        }
+
+        ul.price li::before{
+            content: "$";
+            font-weight: bold;
+            color: green;
+            margin-right: 3px;
+        }
+
+        ul.price li.checked::after{
+            background: url(checked.png) no-repeat;
+            background-size: 16px;
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            content: "";
+            margin-left: 3px;
+        }
+        .bubble{
+            background-color: #122b40;
+            padding: 20px;
+            display: inline-block;
+            color: white;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            position: relative;
+            margin-bottom: 13px;
+        }
+
+        .bubble::before,.bubble::after{
+            width: 40px;
+            height: 40px;
+            background-color: #122b40;
+            content: "111";
+            display: block;
+            position: absolute;
+            bottom: -10px;
+            left: 10px;
+            border-radius: 20px;
+            z-index: -6;
+        }
+        .bubble::after{
+            background-color: white;
+            left: 25px;
+            bottom: -13px;
+            z-index: -5;
+        }
+    </style>
+</head>
+<body>
+    <details>
+        <summary>1</summary>
+        <h1 class="ps">Header 1</h1>
+        <p class="ps">P element</p>
+    </details>
+    <details>
+    <summary>2</summary>
+        <ul class="price">
+            <li>525.52</li>
+            <li class="checked">328.30</li>
+            <li class="checked">58.02</li>
+            <li>987.82</li>
+        </ul>
+    </details>
+    <details>
+        <summary>3</summary>
+        <div class="bubble">Simple text</div>
+    </details>
+</body>
+</html>
