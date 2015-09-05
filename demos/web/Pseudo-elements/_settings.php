@@ -9,5 +9,6 @@
 return [
     'source-files' => [
         'index.html'
-    ]
+    ],
+    'title' => 'Pseudo elements'
 ];

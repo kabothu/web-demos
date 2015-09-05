@@ -15,9 +15,11 @@ if ($this->dataNavWeb()): ?>
 
 <?php if ($this->dataNavConsole()): ?>
 <h2>Console</h2>
-<ul class="nav nav-pills nav-stacked">
+<ul class="nav nav-pills nav-stacked" role="ajax">
     <?php foreach($this->dataNavConsole() as $key => $item): ?>
-        <li><code><?= $item ?></code></li>
+        <li<?= $this->isThisNav("/demos/ajax/console/$item") ? ' class="active"' : ''?>>
+            <a href="/demos/ajax/console/<?= $item ?>"><?= $item ?></a>
+        </li>
     <?php endforeach ;?>
 </ul>
 <?php endif; ?>

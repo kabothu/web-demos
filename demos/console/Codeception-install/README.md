@@ -16,7 +16,7 @@ php "%BIN_TARGET%" %*
 
 ## 2(a). Selenium server automatic
 Download and run [run-selenium-server.php](https://cdn.rawgit.com/ilopX/web-demos/master/demos/console/Codeception-install/run-selenium-server.php)
-![run-screenshot](run-screenshot.png)
+![run-screenshot](https://raw.githubusercontent.com/ilopX/web-demos/master/demos/console/Codeception-install/run-screenshot.png)
 
 ## 2(b). Selenium server manual
 + [Download](http://www.seleniumhq.org/download) Selenium Standalone Server and put to c:\selenium-server

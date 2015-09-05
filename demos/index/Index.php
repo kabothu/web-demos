@@ -21,9 +21,16 @@ class Index{
     private $demosDir;
     private $url;
 
+    private $dataWebDemos;
+    private $dataNavConsole;
+    private $dataProjectFile;
+
+    private $_settings;
+
     function __construct(){
         $this->demosDir = dirname(__DIR__);
         $this->url(); // init var $this->url
+        $this->_settings();
     }
 
     function isAjax(){
@@ -46,9 +53,11 @@ class Index{
     }
 
     //////////////////////////// DATA /////////////////////////////////////////////////
-    private $dataWebDemos;
-    private $dataNavConsole;
-    private $dataProjectFile;
+
+    function dataTitle(){
+        return $this->isSettings('title', false) ? $this->_settings['title'] : 'Web demos';
+    }
+
     function dataNavWeb(){
         if (!isset($this->dataWebDemos)){
             $this->dataWebDemos = $this->scanDir(Index::DIR_DEMOS_WEB);
@@ -68,59 +77,55 @@ class Index{
         if ($this->dataProjectFile){
             return $this->dataProjectFile;
         }
-        $fileName_settings = dirname($this->demosDir).$this->toNormalUrl($this->url).'/_settings.php';
 
         $data = [];
-        if (file_exists($fileName_settings)){
-            $sett = include $fileName_settings;
+        if ($this->isSettings('live')){
+            $data[] = $this->createDataLive('Live');
+        }
 
-            if ($this->isSettParam('live', $sett)){
-                $data[] = $this->createDataLive($fileName_settings, 'Live');
-            }
-
-            if (isset($sett['source-files'])){
-                foreach($sett['source-files'] as $file){
-                    $data[] = $this->createDataFromFile(dirname($fileName_settings),$file);
-                }
+        if ($this->isSettings('source-files', false)){
+            foreach($this->_settings['source-files'] as $file){
+                $data[] = $this->createDataFromFile($file);
             }
         }
+
 
         return $this->dataProjectFile = $data;
     }
 
     //////////////////////////// PRIVATE //////////////////////////////////////////////
     //////////////////////////// DATA ////////////////////////////////////////////////
-    private function createDataFromFile($path, $name){
+    private function createDataFromFile($name){
         $item = [];
-        $fileName = $path.'/'.$name;
+        $fileName = $this->currentDirProject().'/'.$name;
         $item['name'] = $name;
         $item['id'] = strtolower(preg_replace("/[\/\\\\. ]/", '-', $name));
         $item['content'] = file_get_contents($fileName);
-        $item['file-type'] = pathinfo($fileName, PATHINFO_EXTENSION);
+        $item['type'] = pathinfo($fileName, PATHINFO_EXTENSION);
 
-        switch($item['file-type']){
+        switch($item['type']){
             case 'md':
                 $item['content'] = MarkdownExtra::defaultTransform($item['content']);
                 break;
             case 'js':
-                $item['file-type'] = 'javascript';
+                $item['type'] = 'javascript';
                 break;
             case 'htm':
-                $item['file-type'] = 'html';
+                $item['type'] = 'html';
                 break;
         }
 
         return $item;
     }
 
-    private function createDataLive($fileSetting, $name){
+    private function createDataLive($name){
         $item['name'] = $name;
         $item['id'] = strtolower(preg_replace("/[\/\\\\. ]/", '-', $name));
         $item['content'] = '';
-        $item['file-type'] = 'live';
+        $item['type'] = 'live';
 
         $normalSlise = preg_replace("/[\/\\\\]/", '\/', dirname($this->demosDir));
-        $normalPath = preg_replace("/[\/\\\\]/", '/', dirname($fileSetting));
+        $normalPath = preg_replace("/[\/\\\\]/", '/', $this->currentDirProject());
         $item['url'] =  $this->toNormalUrl(preg_replace("/^".$normalSlise."/", '', $normalPath));
         return $item;
     }
@@ -166,11 +171,30 @@ class Index{
         return $this->url == $url;
     }
 
-    function isSettParam($name, &$data){
-        if (isset($data[$name])){
-            return $data[$name];
+    function isSettings($name, $default = true){
+        if (isset($this->_settings[$name])){
+            return $this->_settings[$name];
         }
-        return true;
+        return $default;
+    }
+
+    private function _settings(){
+        if ($this->_settings){
+            return $this->_settings;
+        }
+
+        $fileName_settings = $this->currentDirProject().'/_settings.php';
+
+        $this->_settings = [];
+        if (file_exists($fileName_settings)){
+            $this->_settings = include $fileName_settings;
+        }
+
+        return $this->_settings;
+    }
+
+    private function currentDirProject(){
+        return dirname($this->demosDir).$this->toNormalUrl($this->url);
     }
 }
 

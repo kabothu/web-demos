@@ -10,5 +10,6 @@ return [
     'source-files' => [
         'readme.md',
         'index.php'
-    ]
+    ],
+    'title' => 'Net Test'
 ];

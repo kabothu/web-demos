@@ -17,7 +17,12 @@ use ilopx\demos\index\Index;
 $index = new Index();
 if ($index->isAjax()){
     header('Content-type: application/json');
-    echo json_encode($index->dataProjectFile());
+    $arr = $index->dataProjectFile();
+    array_unshift($arr, [
+        'title' => $index->dataTitle(),
+        'type' => 'config'
+    ]);
+    echo json_encode($arr);
     exit;
 }
 else if ($index->isRedirect()){
@@ -28,8 +33,13 @@ else if ($index->isRedirect()){
 <html>
 <head>
     <meta charset="UTF-8">
+    <title><?= $index->dataTitle(); ?></title>
     <link rel="stylesheet" href="/vendor/bower/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="/demos/index/index.css">
+    <script>
+        document.write('<style> #noscript-content { display: none } </style>');
+    </script>
+
 </head>
 <body>
     <div class="container-fluid">
@@ -38,7 +48,7 @@ else if ($index->isRedirect()){
         </div>
         <div class="col-md-10">
             <h1>Web demos projects</h1>
-            <noscript><?php $index->render('content'); ?></noscript>
+            <div id="noscript-content"><?php $index->render('content'); ?></div>
             <div id="ajax-content"></div>
         </div>
     </div>
@@ -68,25 +78,19 @@ else if ($index->isRedirect()){
     <script>
         // Create auto size main frame
         /*$(function() {
-         var msetHook = false;
-         var mainFrame = $('#main-frame');
-         function setHook()
-         {
-         if (msetHook)
-         return;
-         msetHook = true;
+            var msetHook = false;
+            var mainFrame = $('#main-frame');
+            function setHook()
+            {
+                if (msetHook)
+                return;
+                msetHook = true;
 
-         var frameBody = $(mainFrame[0].contentWindow.document.body);
-         frameBody.detectChange('clientHeight',
-         function (oldVal, newVal, isInit)
-         {
-         mainFrame.height(newVal + 20);
 
-         });
-         }
+            }
 
-         mainFrame.load(setHook);*/
-        });
+            mainFrame.load(setHook);
+        });*/
     </script>
 </body>
 </html>

@@ -14,14 +14,14 @@ else
             </div>
         <?php else: ?>
             <div class="form-group">
-                <?php if ($file['file-type'] == 'md'): ?>
+                <?php if ($file['type'] == 'md'): ?>
                     <div class="panel panel-default">
                         <div class="panel-heading"><?= $file['name'] ?></div>
                         <div class="panel-body"><?= $file['content']; ?></div>
                     </div>
                 <?php else: ?>
                     <label><?= $file['name'] ?></label>
-                    <textarea class="form-control" rows="10" data-file-type="<?= $file['file-type'] ?>"><?= $file['content']; ?></textarea>
+                    <textarea class="form-control" rows="10"><?= $file['content']; ?></textarea>
                 <?php endif; ?>
             </div>
         <?php endif; ?>

@@ -10,5 +10,6 @@ return [
     'source-files' => [
         'index.js',
         'index.php'
-    ]
+    ],
+    'title' => 'Html5 editable'
 ];

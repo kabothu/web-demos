@@ -9,7 +9,9 @@
 return [
     'source-files' => [
         'README.md',
-        'index.html'
+        'run-selenium-server.php'
     ],
-    'title' => 'Html5 tags'
+    'live' => false,
+    'title' => 'Install codeception and selenium server in Windows',
+
 ];
