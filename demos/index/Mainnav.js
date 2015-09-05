@@ -1,5 +1,5 @@
 /**
- * Created by XTreme.ws on 30.08.2015.
+ * Created by ilopX on 30.08.2015.
  */
 (function(){
     var Mainnav = {
@@ -106,5 +106,5 @@
         }
     };
 
-    Mainnav.init();
+    //Mainnav.init();
 })();

@@ -25,19 +25,24 @@
 </head>
 <body>
     <div class="container">
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">Edit name <span class="glyphicon glyphicon-floppy-saved" style="float: right; display: none"></span></div>
-                <div id="name"  class="panel-body" contenteditable="true">
-                    <?= $sett->get('name', 'not set'); ?>
+        <noscript>
+            <div class="alert alert-danger">Javascript disabled. Storing on a server is not available</div>
+        </noscript>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Edit name <span class="glyphicon glyphicon-floppy-saved" style="float: right; display: none"></span></div>
+                    <div id="name"  class="panel-body" contenteditable="true">
+                        <?= $sett->get('name', 'not set'); ?>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">Edit zip <span class="glyphicon glyphicon-floppy-saved" style="float: right; display: none"></span></div>
-                <div id="zip"  class="panel-body" contenteditable="true">
-                    <?= $sett->get('zip', 'not set'); ?>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Edit zip <span class="glyphicon glyphicon-floppy-saved" style="float: right; display: none"></span></div>
+                    <div id="zip"  class="panel-body" contenteditable="true">
+                        <?= $sett->get('zip', 'not set'); ?>
+                    </div>
                 </div>
             </div>
         </div>

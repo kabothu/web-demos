@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: XTreme.ws
+ * User: ilopX
  * Date: 04.09.2015
  * Time: 19:52
  */
@@ -42,13 +42,13 @@ class Index{
 
     function render($name){
         $index = $this;
-        include_once "view/$name.php";
+        include_once dirname(__FILE__)."/view/$name.php";
     }
 
     //////////////////////////// DATA /////////////////////////////////////////////////
     private $dataWebDemos;
     private $dataNavConsole;
-
+    private $dataProjectFile;
     function dataNavWeb(){
         if (!isset($this->dataWebDemos)){
             $this->dataWebDemos = $this->scanDir(Index::DIR_DEMOS_WEB);
@@ -65,56 +65,63 @@ class Index{
         return $this->dataNavConsole;
     }
     function dataProjectFile(){
-        $fileName_settings = dirname($this->demosDir).$this->url.'/_settings.php';
+        if ($this->dataProjectFile){
+            return $this->dataProjectFile;
+        }
+        $fileName_settings = dirname($this->demosDir).$this->toNormalUrl($this->url).'/_settings.php';
 
         $data = [];
         if (file_exists($fileName_settings)){
             $sett = include $fileName_settings;
 
-            if (isset($sett['live']) && $sett['live']){
-                $data[] = $this->createDataLive($fileName_settings);
+            if ($this->isSettParam('live', $sett)){
+                $data[] = $this->createDataLive($fileName_settings, 'Live');
             }
 
-            foreach($sett['source-files'] as $file){
-                $data[] = $this->createDataFromFile(dirname($fileName_settings),$file);
-            }
-
-            if (isset($sett['live-only']) && $sett['live-only']){
-                $data[] = $this->createDataLiveOnly();
+            if (isset($sett['source-files'])){
+                foreach($sett['source-files'] as $file){
+                    $data[] = $this->createDataFromFile(dirname($fileName_settings),$file);
+                }
             }
         }
 
-        return $data;
+        return $this->dataProjectFile = $data;
     }
 
     //////////////////////////// PRIVATE //////////////////////////////////////////////
+    //////////////////////////// DATA ////////////////////////////////////////////////
     private function createDataFromFile($path, $name){
         $item = [];
         $fileName = $path.'/'.$name;
         $item['name'] = $name;
-        $item['id'] = preg_replace('/\\/', '-', $name);
-        $item['content'] = $item['id'] .file_get_contents($fileName);
+        $item['id'] = strtolower(preg_replace("/[\/\\\\. ]/", '-', $name));
+        $item['content'] = file_get_contents($fileName);
         $item['file-type'] = pathinfo($fileName, PATHINFO_EXTENSION);
 
-        if ($item['file-type'] == 'md'){
-            $item['content'] = MarkdownExtra::defaultTransform($item['content']);
+        switch($item['file-type']){
+            case 'md':
+                $item['content'] = MarkdownExtra::defaultTransform($item['content']);
+                break;
+            case 'js':
+                $item['file-type'] = 'javascript';
+                break;
+            case 'htm':
+                $item['file-type'] = 'html';
+                break;
         }
 
         return $item;
     }
 
-    private function createDataLive(){
-        $item['id'] = $item['name'] = 'Live';
+    private function createDataLive($fileSetting, $name){
+        $item['name'] = $name;
+        $item['id'] = strtolower(preg_replace("/[\/\\\\. ]/", '-', $name));
         $item['content'] = '';
         $item['file-type'] = 'live';
-        return $item;
-    }
 
-    private function createDataLiveOnly(){
-        $item['name'] = 'Live Only';
-        $item['id'] = 'live-only';
-        $item['content'] = '';
-        $item['file-type'] = 'live';
+        $normalSlise = preg_replace("/[\/\\\\]/", '\/', dirname($this->demosDir));
+        $normalPath = preg_replace("/[\/\\\\]/", '/', dirname($fileSetting));
+        $item['url'] =  $this->toNormalUrl(preg_replace("/^".$normalSlise."/", '', $normalPath));
         return $item;
     }
 
@@ -152,7 +159,18 @@ class Index{
             $url = $_SERVER['REQUEST_URI'];
         }
 
-        return $this->url = $this->toNormalUrl($url);
+        return $this->url = $url;
+    }
+
+    function isThisNav($url){
+        return $this->url == $url;
+    }
+
+    function isSettParam($name, &$data){
+        if (isset($data[$name])){
+            return $data[$name];
+        }
+        return true;
     }
 }
 

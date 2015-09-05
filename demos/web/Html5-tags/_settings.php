@@ -8,7 +8,7 @@
 
 return [
     'source-files' => [
-        'readme.md',
-        'index.php'
+        'README.md',
+        'index.html'
     ]
 ];
