@@ -58,39 +58,5 @@ else if ($index->isRedirect()){
     <script src="/vendor/bower/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="/vendor/bower/ilopx-jquery-detect-change/dist/jquery.detect-change.js"></script>
     <script src="/demos/index/AjaxNav.js"></script>
-    <script>
-        // Create ace editors
-        /*var index = 0;
-        $('textarea').each(function(i, el){
-            index++;
-            el = $(el).attr('id', 'editor'+index);
-
-            var editor = ace.edit('editor'+index);
-            editor.$blockScrolling = Infinity;
-            editor.getSession().setValue(el.val());
-            editor.setTheme("ace/theme/tomorrow");
-            editor.session.setMode("ace/mode/"+el.attr('data-file-type'));
-            editor.setAutoScrollEditorIntoView(true);
-            editor.setOption("maxLines", 10000);
-            editor.setOption("readOnly", true);
-        });*/
-    </script>
-    <script>
-        // Create auto size main frame
-        /*$(function() {
-            var msetHook = false;
-            var mainFrame = $('#main-frame');
-            function setHook()
-            {
-                if (msetHook)
-                return;
-                msetHook = true;
-
-
-            }
-
-            mainFrame.load(setHook);
-        });*/
-    </script>
 </body>
 </html>

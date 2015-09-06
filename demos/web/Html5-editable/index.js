@@ -19,3 +19,4 @@ $('.panel > div:nth-child(2)').blur(function(p){
     });
 
 });
+

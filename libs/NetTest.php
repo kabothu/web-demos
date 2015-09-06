@@ -12,6 +12,7 @@
 
 namespace ilopx\libs;
 
+
 class NetTest{
     const CHECK_ONE_TIME = 1;   // проверять скорость только один раз за сессию
     const CHECK_FIVE_TIME = 5;  // проверять скорость после 5 просмотров

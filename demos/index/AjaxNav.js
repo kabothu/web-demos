@@ -3,19 +3,14 @@
  */
 $(function(){
     var AjaxNav = {
-        nav: $('[role=ajax] li'),           // главная навигация
-        ajaxContent: $('#ajax-content'),    // контейнер где будет храниться контент
-        tabs: null,                         //
+        nav: $('[role=ajax] li'),
+        ajaxContent: $('#ajax-content'),
+        tabs: null,
         tabContent: null,
-        // инициализация аякс навигации
         init: function(){
-            // удаляем старый контент который предназначен для
-            // пользователей которые оключили js
             $('#noscript-content').remove();
 
             AjaxNav.createUIContainers();
-            // переделываем стандартную навигация
-            // в аякс
             AjaxNav.initAjaxNav();
 
             $(window).on('popstate', function(e){
@@ -28,21 +23,17 @@ $(function(){
 
             AjaxNav.nav.parent().find('.active:first a').click();
         },
-        // создание контейнеров для пользовательских элементов
         createUIContainers: function(){
-            // создание нацигации для закладок
             AjaxNav.tabs = $('<ul/>',{
                 id: "tabs-mmm",
                 class: 'nav nav-tabs'
             });
 
-            // создание контейнера для контента закладок
             AjaxNav.tabContent = $('<div/>',{
                 class: 'tab-content',
                 id: 'daasdasd'
             });
 
-            // добавление заклодак и контена на страницу
             AjaxNav.ajaxContent
                 .append(AjaxNav.tabs)
                 .append(AjaxNav.tabContent);
@@ -56,14 +47,14 @@ $(function(){
                 e.preventDefault();
             })
         },
-        // загрузка данных
+
         loadData: function(url){
             $.ajax({
                 url: 'index.php',
                 data: {
                     ajaxurl: url
                 },
-                // если все прошло успешно создаем пользовательские элементы
+
                 success: AjaxNav.createUI,
                 error: function() {}
             });
@@ -79,14 +70,12 @@ $(function(){
             else
                 history.pushState(dataSave, dataSave.title, dataSave.url);
         },
-        // создание пользовательских элементов
         createUI: function(data){
-            // очистка контейнеров от старого контента
             AjaxNav.tabContent.empty();
             AjaxNav.tabs.empty();
             AjaxNav.ajaxContent.hide();
 
-            // на основании json данных создаем ползовательские элементы
+
             data.forEach(function(item) {
                 switch (item['type']) {
                     case 'config':
@@ -106,7 +95,6 @@ $(function(){
                 }
             });
 
-            // активация первой кладки
             AjaxNav.tabs.find('a:eq(0)').tab('show');
             AjaxNav.ajaxContent.show();
         },
