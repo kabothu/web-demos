@@ -6,8 +6,8 @@
  * Time: 12:45
  * Name: Web demos proj
  * Project: https://github.com/ilopX/web-demos-proj
- * Demo: https://github.com/ilopX/web-demos-proj/tree/master/projects/NetTest
- * This file: https://github.com/ilopX/web-demos-proj/blob/master/libs/NetTest.php
+ * Demo: https://github.com/ilopX/web-demos/tree/master/demos/web/NetTest
+ * This file: https://github.com/ilopX/web-demos/blob/master/demos/web/NetTest/index.php
  */
 
 namespace ilopx\libs;
