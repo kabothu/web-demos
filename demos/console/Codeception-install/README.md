@@ -1,7 +1,6 @@
 # Install codeception and selenium server in Windows
 ### Video
-[![Install codeception and selenium server, example Yii2)]
-(http://img.youtube.com/vi/jR2ksepaTrE/1.jpg)](http://www.youtube.com/watch?v=jR2ksepaTrE)
+[![Install codeception](http://img.youtube.com/vi/jR2ksepaTrE/0.jpg)](http://www.youtube.com/watch?v=jR2ksepaTrE)
 
 ## 1. Install codeception
 + $ composer require "codeception/codeception:*"
