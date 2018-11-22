@@ -28,9 +28,7 @@ java -jar c:\selenimu-server\selenium-server-standalone{version}.jar -Dwebdriver
 ## Codeception and Selenium server in action
 
 #### PHP codeception and selenium server in firefox (Video)
-[![PHP codeception and selenium server in firefox (Video)]
-(http://img.youtube.com/vi/tgtKketbQLk/1.jpg)](http://www.youtube.com/watch?v=tgtKketbQLk)
+[![PHP codeception and selenium server in firefox (Video)](http://img.youtube.com/vi/tgtKketbQLk/1.jpg)](http://www.youtube.com/watch?v=tgtKketbQLk)
 
 #### PHP codeception and selenium server in Google Chrome Driver (Video)
-[![PHP codeception and selenium server in Google Chrome Driver (Video)]
-(http://img.youtube.com/vi/YwEOqkWvz3s/1.jpg)](http://www.youtube.com/watch?v=YwEOqkWvz3s)
+[![PHP codeception and selenium server in Google Chrome Driver (Video)](http://img.youtube.com/vi/YwEOqkWvz3s/1.jpg)](http://www.youtube.com/watch?v=YwEOqkWvz3s)
